@@ -19,37 +19,36 @@ def main():
     print("=" * 55)
     print()
 
-    print("[1/3] Opening LinkedIn login page...")
-    print("      Log in manually in the browser window.\n")
+    print("Opening LinkedIn login page")
+    print("Log-in in the browser window.\n")
 
     try:
         pw, browser, page = open_browser_and_login(headless=False, slow_mo=100)
     except TimeoutError:
-        logger.error("Login timed out. Please restart and try again.")
+        logger.error("Login timed out. Try again.")
         sys.exit(1)
     except Exception as e:
         logger.error(f"Browser launch failed: {e}")
         sys.exit(1)
 
     print()
-    print("  ✅ Login successful!\n")
+    print("Login successful\n")
 
-    print("[2/3] Enter the LinkedIn post URL to scrape.")
-    print("      Example: https://www.linkedin.com/posts/...\n")
+    print("Enter the LinkedIn post URL")
 
     post_url = input("  Post URL: ").strip()
 
     if not post_url:
-        logger.error("No URL provided. Exiting.")
+        logger.error("No URL provided. Exit")
         browser.close()
         pw.stop()
         sys.exit(1)
 
     if "linkedin.com" not in post_url:
-        logger.warning("URL doesn't look like a LinkedIn URL, but proceeding anyway...")
+        logger.warning("Not looking like a valid linkedin url")
 
     print()
-    print("[3/3] Scraping comments... (this may take a minute)\n")
+    print("Scraping comments\n")
 
     output_path = "output/linkedin_leads.xlsx"
 
@@ -67,8 +66,8 @@ def main():
         sys.exit(1)
 
     if not leads:
-        print("  ⚠️  No comments found on this post.")
-        print("      The post may have no comments, or the page structure may have changed.")
+        print("No comments found.")
+        print("The post may have no comments.")
         browser.close()
         pw.stop()
         sys.exit(0)
@@ -80,8 +79,8 @@ def main():
 
     print()
     print("=" * 55)
-    print(f"  ✅ Done! Extracted {len(leads)} leads.")
-    print(f"  📁 Saved to: {saved_path}")
+    print(f"Extracted {len(leads)} comments.")
+    print(f"Saved to: {saved_path}")
     print("=" * 55)
     print()
 
