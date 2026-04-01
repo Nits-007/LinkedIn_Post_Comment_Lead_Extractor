@@ -27,7 +27,7 @@ def open_browser_and_login(headless: bool = False, slow_mo: int = 100):
     page = context.new_page()
 
     page.goto("https://www.linkedin.com/login", wait_until="domcontentloaded", timeout=30000)
-    logger.info("LinkedIn login page opened. Please log in manually in the browser...")
+    logger.info("Log in manually in the browser")
 
     try:
         page.wait_for_url(
@@ -43,12 +43,12 @@ def open_browser_and_login(headless: bool = False, slow_mo: int = 100):
         pass
     time.sleep(2)
 
-    logger.info(f"Login detected! Redirected to: {page.url}")
+    logger.info(f"Redirected to: {page.url}")
     return pw, browser, page
 
 
 def _switch_to_most_recent(page: Page):
-    logger.info("Attempting to switch comment sort to 'Most recent'...")
+    logger.info("Attempting to switch comment sort to Most recent")
 
     try:
         page.evaluate("window.scrollBy(0, 600)")
@@ -96,13 +96,13 @@ def _switch_to_most_recent(page: Page):
                 pass
 
         if not sort_button:
-            logger.info("Sort dropdown not found — post may have few comments or sort is not available.")
+            logger.info("Sort dropdown not found, sort is not available.")
             return
 
         try:
             btn_text = sort_button.inner_text().strip().lower()
             if "most recent" in btn_text:
-                logger.info("Comments are already sorted by 'Most recent'.")
+                logger.info("Comments are already sorted by Most recent")
                 return
         except Exception:
             pass
@@ -114,7 +114,7 @@ def _switch_to_most_recent(page: Page):
             pass
 
         sort_button.click()
-        logger.info("Clicked sort dropdown, waiting for options to appear...")
+        logger.info("Clicked sort dropdown")
 
         dropdown_visible = False
         try:
@@ -124,9 +124,9 @@ def _switch_to_most_recent(page: Page):
                 timeout=5000,
             )
             dropdown_visible = True
-            logger.info("Dropdown menu is now visible.")
+            logger.info("Dropdown menu")
         except Exception:
-            logger.info("wait_for_selector timed out for dropdown, trying anyway...")
+            logger.info("wait_for_selector timed out for dropdown, trying anyway")
 
         time.sleep(0.5) 
 
@@ -143,91 +143,6 @@ def _switch_to_most_recent(page: Page):
             except Exception as e:
                 logger.info(f"Method A (Playwright locator) failed: {e}")
 
-        # # Method B: Direct aria-label selector without visibility check
-        # if not clicked:
-        #     try:
-        #         recent_option = page.query_selector('li[aria-label*="Most recent"]')
-        #         if recent_option:
-        #             recent_option.click()
-        #             clicked = True
-        #             logger.info("Switched to 'Most recent' via li[aria-label] selector.")
-        #             time.sleep(2)
-        #         else:
-        #             logger.info("Method B: No li[aria-label*='Most recent'] found in DOM.")
-        #     except Exception as e:
-        #         logger.info(f"Method B (aria-label) failed: {e}")
-
-        # # Method C: Iterate listbox options without visibility check
-        # if not clicked:
-        #     try:
-        #         options = page.query_selector_all('ul[role="listbox"] li[role="option"]')
-        #         logger.info(f"Method C: Found {len(options)} listbox options.")
-        #         for opt in options:
-        #             try:
-        #                 aria = opt.get_attribute("aria-label") or ""
-        #                 text = opt.inner_text().strip().lower()
-        #                 logger.info(f"  Option: aria-label='{aria[:50]}', text='{text[:30]}'")
-        #                 if "most recent" in aria.lower() or "most recent" in text:
-        #                     opt.click()
-        #                     clicked = True
-        #                     logger.info("Switched to 'Most recent' via listbox option.")
-        #                     time.sleep(2)
-        #                     break
-        #             except Exception:
-        #                 continue
-        #     except Exception as e:
-        #         logger.info(f"Method C (listbox iteration) failed: {e}")
-
-        # # Method D: Click via JavaScript
-        # if not clicked:
-        #     try:
-        #         clicked = page.evaluate("""
-        #             () => {
-        #                 // Try aria-label first
-        #                 const byAria = document.querySelector('li[aria-label*="Most recent"]');
-        #                 if (byAria) {
-        #                     byAria.click();
-        #                     return true;
-        #                 }
-        #                 // Try text content in option items
-        #                 const options = document.querySelectorAll('li[role="option"], .artdeco-dropdown__item');
-        #                 for (const opt of options) {
-        #                     if ((opt.textContent || '').trim().toLowerCase().includes('most recent')) {
-        #                         opt.click();
-        #                         return true;
-        #                     }
-        #                 }
-        #                 return false;
-        #             }
-        #         """)
-        #         if clicked:
-        #             logger.info("Switched to 'Most recent' via JS click.")
-        #             time.sleep(2)
-        #         else:
-        #             logger.info("Method D (JS click): No matching element found.")
-        #     except Exception as e:
-        #         logger.info(f"Method D (JS) failed: {e}")
-
-        # # Method E: Keyboard navigation (dropdown should be open)
-        # if not clicked:
-        #     try:
-        #         page.keyboard.press("ArrowDown")
-        #         time.sleep(0.3)
-        #         page.keyboard.press("ArrowDown")
-        #         time.sleep(0.3)
-        #         page.keyboard.press("Enter")
-        #         time.sleep(2)
-        #         # Verify it worked
-        #         try:
-        #             new_text = sort_button.inner_text().strip().lower()
-        #             if "most recent" in new_text:
-        #                 clicked = True
-        #                 logger.info("Switched to 'Most recent' via keyboard navigation.")
-        #         except Exception:
-        #             pass
-        #     except Exception:
-        #         pass
-
         if not clicked:
             logger.warning("Could not switch to most recent sort order, moving with most relevant.")
 
@@ -237,7 +152,7 @@ def _switch_to_most_recent(page: Page):
 
 def _expand_all_comments(page: Page, max_scrolls: int, scroll_delay: float):
 
-    logger.info("Expanding all comments...")
+    logger.info("Expanding all comments")
 
     for attempt in range(max_scrolls):
         expanded = False
@@ -389,7 +304,7 @@ def scrape_post_comments(
     logger.info(f"Navigating to post: {post_url}")
 
     page.goto(post_url, wait_until="domcontentloaded", timeout=30000)
-    logger.info("Post page loaded. Waiting for comments section...")
+    logger.info("Post page loaded. Waiting for comments section")
 
     try:
         page.wait_for_selector(
@@ -397,7 +312,7 @@ def scrape_post_comments(
             timeout=15000,
         )
     except Exception:
-        logger.warning("Comments section not found immediately, trying to trigger it...")
+        logger.warning("Comments section not found, trying to trigger it")
 
     time.sleep(2)  
    
