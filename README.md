@@ -14,4 +14,4 @@ To run the project :
 11. Wait for some time (depends on the internet connection and number of comments on the post).
 12. The scraped comments along with the necessary information like time, post url, commenter name, commenter profile url, comment and email adress (if available) will be stored in an excel sheet inside the output folder.
 
-Demo Video Drive Link: 
+Demo Video Drive Link: https://drive.google.com/file/d/1doJSgIUQ9eA3VN_a4Y2b9qBP-IVbUruR/view?usp=sharing
