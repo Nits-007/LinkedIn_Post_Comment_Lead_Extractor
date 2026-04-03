@@ -47,7 +47,7 @@ def open_browser_and_login(headless: bool = False, slow_mo: int = 100):
     return pw, browser, page
 
 
-def _switch_to_most_recent(page: Page):
+def switch_to_most_recent(page: Page):
     logger.info("Attempting to switch comment sort to Most recent")
 
     try:
@@ -150,7 +150,7 @@ def _switch_to_most_recent(page: Page):
         logger.warning(f"Failed to switch comment sort order: {e}. Proceeding anyway.")
 
 
-def _expand_all_comments(page: Page, max_scrolls: int, scroll_delay: float):
+def expand_all_comments(page: Page, max_scrolls: int, scroll_delay: float):
 
     logger.info("Expanding all comments")
 
@@ -213,7 +213,7 @@ def _expand_all_comments(page: Page, max_scrolls: int, scroll_delay: float):
     logger.info("Finished expanding comments.")
 
 
-def _extract_comments(page: Page, post_url: str) -> list[dict]:
+def extract_comments(page: Page, post_url: str) -> list[dict]:
     leads = []
     now = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC")
 
@@ -331,10 +331,10 @@ def scrape_post_comments(
             except Exception:
                 pass
 
-    _switch_to_most_recent(page)
+    switch_to_most_recent(page)
 
-    _expand_all_comments(page, max_scrolls, scroll_delay)
+    expand_all_comments(page, max_scrolls, scroll_delay)
 
-    leads = _extract_comments(page, post_url)
+    leads = extract_comments(page, post_url)
 
     return leads
