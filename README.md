@@ -1,5 +1,5 @@
 To run the project :
-(Make to sure to have Python3 installed)
+(Make sure to have Python3 installed)
 
 1. Clone the repository: git clone https://github.com/Nits-007/LinkedIn_Post_Comment_Lead_Extractor.git
 2. Move to the project folder: cd LinkedIn_Post_Comment_Lead_Extractor
