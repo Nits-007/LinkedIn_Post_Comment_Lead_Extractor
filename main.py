@@ -1,5 +1,7 @@
 import sys
 import logging
+from scraper import open_browser_and_login, scrape_post_comments
+from exporter import export_to_excel
 
 logging.basicConfig(
     level=logging.INFO,
@@ -10,9 +12,7 @@ logger = logging.getLogger("linkedin_leads")
 
 
 def main():
-    from scraper import open_browser_and_login, scrape_post_comments
-    from exporter import export_to_excel
-
+    
     print()
     print("=" * 55)
     print("  LinkedIn Post Comment Lead Extractor")
